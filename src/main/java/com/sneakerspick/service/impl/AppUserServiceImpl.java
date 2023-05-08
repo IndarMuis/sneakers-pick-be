@@ -10,18 +10,20 @@ import com.sneakerspick.repository.AppUserRepository;
 import com.sneakerspick.repository.RoleRepository;
 import com.sneakerspick.security.JWTAuthService;
 import com.sneakerspick.service.AppUserService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import javax.management.relation.RoleNotFoundException;
+
 import java.util.Collections;
 
+@Transactional
 @AllArgsConstructor
 @Service
+@Slf4j
 public class AppUserServiceImpl implements AppUserService {
 
 	private AppUserRepository appUserRepository;
@@ -36,6 +38,11 @@ public class AppUserServiceImpl implements AppUserService {
 
 		AppUser appUser = new AppUser();
 		Role role = roleRepository.findById(1).orElseThrow(() -> new DataNotFoundException("Role not found"));
+		boolean isUsernameExist = appUserRepository.existsAppUserByUsername(request.getUsername());
+
+		if (isUsernameExist) {
+			throw new UsernameNotFoundException("Username already exist");
+		}
 
 		appUser.setUsername(request.getUsername());
 		appUser.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -43,10 +50,12 @@ public class AppUserServiceImpl implements AppUserService {
 		appUserRepository.save(appUser);
 		String jwtToken = jwtAuthService.generateToken(appUser);
 
-		Authentication authenticate = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword())
-		);
-		SecurityContextHolder.getContext().setAuthentication(authenticate);
+		log.info("JWT TOKEN : {}", jwtToken);
+
+//		Authentication authenticate = authenticationManager.authenticate(
+//				new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword())
+//		);
+//		SecurityContextHolder.getContext().setAuthentication(authenticate);
 
 		return AuthResponse.builder()
 				.userId(appUser.getId())

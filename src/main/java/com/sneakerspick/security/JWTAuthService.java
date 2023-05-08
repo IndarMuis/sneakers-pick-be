@@ -27,7 +27,7 @@ public class JWTAuthService {
 		//AppUser appUser = (AppUser) authentication.getPrincipal();
 
 		return Jwts.builder()
-				.setIssuer("sneakredpick")
+				.setIssuer("sneakerspick")
 				.setHeaderParam("typ", "JWT")
 				.setIssuedAt(currentDate)
 				.setExpiration(new Date(currentDate.getTime() + SecurityConstants.EXPIRED_DATE))
