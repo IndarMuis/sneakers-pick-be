@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,24 +49,24 @@ public class AppUserServiceImpl implements AppUserService {
 		appUser.setPassword(passwordEncoder.encode(request.getPassword()));
 		appUser.setRoles(Collections.singletonList(role));
 		appUserRepository.save(appUser);
-		String jwtToken = jwtAuthService.generateToken(appUser);
-
-		log.info("JWT TOKEN : {}", jwtToken);
-
-//		Authentication authenticate = authenticationManager.authenticate(
-//				new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword())
-//		);
-//		SecurityContextHolder.getContext().setAuthentication(authenticate);
 
 		return AuthResponse.builder()
 				.userId(appUser.getId())
 				.username(appUser.getUsername())
-				.token(jwtToken)
 				.build();
 	}
 
 	@Override
-	public AuthResponse login(LoginRequest request) {
-		return null;
+	public AuthResponse login(LoginRequest request, UserDetails userDetails) {
+		AppUser appUser =
+				appUserRepository.findDistinctTopByUsername(userDetails.getUsername())
+						.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		String token = jwtAuthService.generateToken(appUser);
+
+		return AuthResponse.builder()
+				.userId(appUser.getId())
+				.username(appUser.getUsername())
+				.token(token)
+				.build();
 	}
 }

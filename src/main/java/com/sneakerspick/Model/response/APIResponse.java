@@ -15,5 +15,5 @@ public class APIResponse<T> {
 
 	private String message;
 	private Integer code;
-	private T result;
+	private T response;
 }
