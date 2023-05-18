@@ -1,9 +1,9 @@
-package com.sneakerspick.Model.request;
+package com.sneakerspick.dto.request;
 
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class LoginRequestDTO {
 
 	private String username;
 	private String password;
