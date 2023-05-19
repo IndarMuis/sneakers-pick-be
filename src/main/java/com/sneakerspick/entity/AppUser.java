@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "user", indexes = {@Index(name = "uk_email", columnList = "email")})
 public class AppUser implements UserDetails {
 
 	@Id

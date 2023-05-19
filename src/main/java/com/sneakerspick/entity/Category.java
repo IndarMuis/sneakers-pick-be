@@ -14,11 +14,11 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "product_category")
-public class ProductCategory {
+@Table(name = "category")
+public class Category {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
@@ -27,7 +27,7 @@ public class ProductCategory {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-		ProductCategory that = (ProductCategory) o;
+		Category that = (Category) o;
 		return getId() != null && Objects.equals(getId(), that.getId());
 	}
 
