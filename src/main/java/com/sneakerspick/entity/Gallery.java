@@ -1,13 +1,9 @@
 package com.sneakerspick.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
-@RequiredArgsConstructor
+@Data
 @Entity
 @Table(name = "gallery")
 public class Gallery {
@@ -16,5 +12,11 @@ public class Gallery {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(columnDefinition = "TEXT")
 	private String url;
+
+	@ManyToOne
+	@JoinColumn(name = "product_id", referencedColumnName = "id")
+	private Product product;
+
 }
