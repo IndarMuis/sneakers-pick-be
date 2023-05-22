@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ErrorDTO {
+public class APIErrorResponse {
 	private String field;
 	private String errorMessage;
 }

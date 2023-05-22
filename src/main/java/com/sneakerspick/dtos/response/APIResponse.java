@@ -15,8 +15,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class APIResponse<T> {
 
-	private String message;
-	private Integer code;
-	private List<ErrorDTO> errors;
+	private APIMessageResponse message;
+	private List<APIErrorResponse> errors;
 	private T response;
 }
