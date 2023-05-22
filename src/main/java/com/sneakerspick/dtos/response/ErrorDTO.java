@@ -1,4 +1,4 @@
-package com.sneakerspick.dto.response;
+package com.sneakerspick.dtos.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

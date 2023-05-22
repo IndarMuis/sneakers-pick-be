@@ -1,11 +1,9 @@
-package com.sneakerspick.entity;
+package com.sneakerspick.domains;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @Entity

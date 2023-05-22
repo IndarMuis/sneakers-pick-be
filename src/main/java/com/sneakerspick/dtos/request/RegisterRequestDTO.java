@@ -1,4 +1,4 @@
-package com.sneakerspick.dto.request;
+package com.sneakerspick.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

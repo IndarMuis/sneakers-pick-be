@@ -1,9 +1,7 @@
-package com.sneakerspick.entity;
+package com.sneakerspick.domains;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Entity

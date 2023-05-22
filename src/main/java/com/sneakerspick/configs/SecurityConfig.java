@@ -1,4 +1,4 @@
-package com.sneakerspick.config;
+package com.sneakerspick.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

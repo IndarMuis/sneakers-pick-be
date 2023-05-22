@@ -1,4 +1,4 @@
-package com.sneakerspick.controller;
+package com.sneakerspick.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

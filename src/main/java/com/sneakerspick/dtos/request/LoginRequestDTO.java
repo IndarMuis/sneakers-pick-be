@@ -1,4 +1,4 @@
-package com.sneakerspick.dto.request;
+package com.sneakerspick.dtos.request;
 
 import lombok.Data;
 

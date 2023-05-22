@@ -1,4 +1,4 @@
-package com.sneakerspick.entity;
+package com.sneakerspick.domains;
 
 import com.sneakerspick.enums.PaymentType;
 import com.sneakerspick.enums.PaymentStatus;
