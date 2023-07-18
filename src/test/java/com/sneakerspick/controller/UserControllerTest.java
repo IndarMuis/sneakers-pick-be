@@ -39,7 +39,33 @@ class UserControllerTest {
     }
 
     @Test
-    void testRegisterSuccess() {
+    void testRegisterSuccess() throws Exception{
+        RegisterUserRequest request = new RegisterUserRequest();
+        request.setName("indar");
+        request.setUsername("indar");
+        request.setEmail("indar@gmail.com");
+        request.setPassword("123");
+        request.setPhone("082123456782");
+
+        mockMvc.perform(
+                post("/api/v1/users/register")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<?> response = objectMapper.readValue(result.getResponse().getContentAsString(), WebResponse.class);
+           Assertions.assertNotNull(response.getData());
+           Assertions.assertEquals("success", response.getMessage());
+           Assertions.assertEquals(201, response.getCode());
+
+           Assertions.assertNull(response.getErrors());
+
+            System.out.println("RESPONSE CODE : " + response.getCode());
+            System.out.println("RESPONSE MESSAGE : " + response.getMessage());
+            System.out.println("RESPONSE DATA : " + response.getData());
+        });
     }
 
     @Test

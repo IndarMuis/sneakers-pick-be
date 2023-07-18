@@ -28,7 +28,7 @@ public class UserController {
         UserResponse response = userService.register(request);
         return WebResponse.<UserResponse>builder()
                 .message("success")
-                .code(HttpStatus.OK.value())
+                .code(HttpStatus.CREATED.value())
                 .data(response).build();
     }
 
