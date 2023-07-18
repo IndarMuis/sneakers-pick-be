@@ -1,5 +1,5 @@
 package com.sneakerspick.enums;
 
 public enum PaymentType {
-	MANUAL, TRANSFER
+    MANUAL, E_WALLET, ATM
 }
