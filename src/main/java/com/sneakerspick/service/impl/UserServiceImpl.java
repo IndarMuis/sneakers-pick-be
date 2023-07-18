@@ -28,13 +28,13 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
 
-    @Override
     @Transactional
+    @Override
     public UserResponse register(RegisterUserRequest request) {
         validationService.validate(request);
         if (userRepository.existsUserByUsername(request.getUsername())) {
             log.error("USER ALREADY EXIST");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "username or email already registered");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "username already registered");
         }
         log.info("CREATE USER");
         Role role = roleRepository.findFirstByName("USER")

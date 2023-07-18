@@ -1,9 +1,12 @@
 package com.sneakerspick.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sneakerspick.domain.Role;
+import com.sneakerspick.domain.User;
 import com.sneakerspick.dto.request.RegisterUserRequest;
 import com.sneakerspick.dto.response.UserResponse;
 import com.sneakerspick.dto.response.WebResponse;
+import com.sneakerspick.repository.RoleRepository;
 import com.sneakerspick.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,6 +34,9 @@ class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -95,5 +103,42 @@ class UserControllerTest {
             System.out.println("RESPONSE ERROR : " + response.getErrors());
         });
 
+    }
+
+    @Test
+    void testRegisterDuplicated() throws Exception {
+        Role role = roleRepository.findFirstByName("USER").orElse(null);
+        User user = new User();
+        user.setName("indar");
+        user.setUsername("indar");
+        user.setEmail("indar@gmail.com");
+        user.setPassword("123");
+        user.setPhone("082123456782");
+        user.setRoles(Set.of(role));
+        userRepository.save(user);
+
+        RegisterUserRequest request = new RegisterUserRequest();
+        request.setName("indar");
+        request.setUsername("indar");
+        request.setEmail("indar@gmail.com");
+        request.setPassword("123");
+        request.setPhone("082123456782");
+
+        mockMvc.perform(
+                post("/api/v1/users/register")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+           WebResponse<?> response = objectMapper.readValue(result.getResponse().getContentAsString(), WebResponse.class);
+           Assertions.assertNull(response.getData());
+           Assertions.assertNotNull(response.getErrors());
+           Assertions.assertEquals("error", response.getMessage());
+
+            System.out.println("RESPONSE ERROR : " + response.getErrors());
+            System.out.println("RESPONSE MESSAGE : " + response.getMessage());
+        });
     }
 }
