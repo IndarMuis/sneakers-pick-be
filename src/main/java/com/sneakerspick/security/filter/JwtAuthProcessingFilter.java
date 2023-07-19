@@ -29,7 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 @Slf4j
-public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class JwtAuthProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private ObjectMapper objectMapper;
 
@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     private CustomUserDetailService customUserDetailService;
 
-    public JwtAuthenticationFilter(
+    public JwtAuthProcessingFilter(
             ObjectMapper objectMapper,
             JwtService jwtService,
             JwtConfig jwtConfig,
@@ -58,6 +58,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+        log.info("START JWT AUTHENTICATION FILTER");
+
         LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
 
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
