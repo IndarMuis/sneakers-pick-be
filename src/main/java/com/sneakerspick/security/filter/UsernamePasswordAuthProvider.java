@@ -8,13 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -23,13 +24,13 @@ import java.util.Optional;
 import java.util.Set;
 
 // TODO: 7/19/2023 TESTING
-@Configuration
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthProcessingProvider implements AuthenticationProvider {
+public class UsernamePasswordAuthProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+     private final PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -46,12 +47,12 @@ public class JwtAuthProcessingProvider implements AuthenticationProvider {
 
         if (!passwordEncoder.matches(password, user.get().getPassword())) {
             log.error("PASSWORD IS WRONG");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid username or password");
+            //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid username or password");
+            throw new BadCredentialsException("invalid username or password");
         }
         List<GrantedAuthority> grantedAuthorities = mapToGrantedAuthority(user.get().getRoles());
-        Authentication auth = new UsernamePasswordAuthenticationToken(username, password, grantedAuthorities);
 
-        return auth;
+        return new UsernamePasswordAuthenticationToken(username, password, grantedAuthorities);
     }
 
     @Override

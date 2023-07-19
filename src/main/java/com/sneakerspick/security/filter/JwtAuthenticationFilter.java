@@ -9,7 +9,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JwtAuthenticationInternalFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
@@ -73,8 +72,8 @@ public class JwtAuthenticationInternalFilter extends OncePerRequestFilter {
                 response.getWriter().write(jsonResponse);
                 return;
             }
-            log.info("Do filter {}", request.getRequestURI());
-            filterChain.doFilter(request, response);
         }
+        log.info("Do filter {}", request.getRequestURI());
+        filterChain.doFilter(request, response);
     }
 }

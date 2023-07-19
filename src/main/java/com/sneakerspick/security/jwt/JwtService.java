@@ -45,11 +45,12 @@ public class JwtService extends JwtConfig {
 
         Instant currentDateTime = Instant.now();
         return Jwts.builder()
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .setHeaderParam("typ", "JWT")
                 .setSubject(customUserDetail.getUsername())
                 .claim("authorities", authorities)
                 .setIssuedAt(Date.from(currentDateTime))
                 .setExpiration(Date.from(currentDateTime.plusSeconds(getExpiration())))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

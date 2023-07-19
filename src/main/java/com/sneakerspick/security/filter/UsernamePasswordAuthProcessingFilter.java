@@ -29,7 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 @Slf4j
-public class JwtAuthProcessingFilter extends AbstractAuthenticationProcessingFilter {
+public class UsernamePasswordAuthProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private ObjectMapper objectMapper;
 
@@ -39,7 +39,7 @@ public class JwtAuthProcessingFilter extends AbstractAuthenticationProcessingFil
 
     private CustomUserDetailService customUserDetailService;
 
-    public JwtAuthProcessingFilter(
+    public UsernamePasswordAuthProcessingFilter(
             ObjectMapper objectMapper,
             JwtService jwtService,
             JwtConfig jwtConfig,
@@ -77,12 +77,19 @@ public class JwtAuthProcessingFilter extends AbstractAuthenticationProcessingFil
         CustomUserDetail customUserDetail = (CustomUserDetail) authResult.getPrincipal();
         String accessToken = jwtService.generateToken(customUserDetail);
 
-        LoginResponse loginResponse = new LoginResponse(
-                customUserDetail.getName(),
-                customUserDetail.getEmail(),
-                accessToken
-        );
-        String jsonResponse = objectMapper.writeValueAsString(loginResponse);
+        WebResponse<LoginResponse> webResponse = WebResponse.<LoginResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .data(new LoginResponse(
+                        customUserDetail.getId(),
+                        customUserDetail.getUsername(),
+                        customUserDetail.getName(),
+                        customUserDetail.getEmail(),
+                        accessToken
+                ))
+                .build();
+
+        String jsonResponse = objectMapper.writeValueAsString(webResponse);
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(jsonResponse);
@@ -93,7 +100,7 @@ public class JwtAuthProcessingFilter extends AbstractAuthenticationProcessingFil
         log.info("INVALID AUTHENTICATION");
         WebResponse<?> webResponse = WebResponse.builder()
                 .code(HttpStatus.UNAUTHORIZED.value())
-                .message("unauthorized")
+                .message("invalid username or password")
                 .build();
         String jsonResponse = objectMapper.writeValueAsString(webResponse);
 
