@@ -1,6 +1,6 @@
 package com.sneakerspick.controller;
 
-import com.sneakerspick.dto.request.RegisterUserRequest;
+import com.sneakerspick.dto.request.RegisterRequest;
 import com.sneakerspick.dto.response.UserResponse;
 import com.sneakerspick.dto.response.WebResponse;
 import com.sneakerspick.service.UserService;
@@ -24,7 +24,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<UserResponse> register(@RequestBody RegisterUserRequest request) {
+    public WebResponse<UserResponse> register(@RequestBody RegisterRequest request) {
         UserResponse response = userService.register(request);
         return WebResponse.<UserResponse>builder()
                 .message("success")

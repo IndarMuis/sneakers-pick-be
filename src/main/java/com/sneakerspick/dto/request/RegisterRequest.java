@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterUserRequest {
+public class RegisterRequest {
 
     @NotNull
     private String name;

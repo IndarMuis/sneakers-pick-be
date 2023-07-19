@@ -3,8 +3,7 @@ package com.sneakerspick.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sneakerspick.domain.Role;
 import com.sneakerspick.domain.User;
-import com.sneakerspick.dto.request.RegisterUserRequest;
-import com.sneakerspick.dto.response.UserResponse;
+import com.sneakerspick.dto.request.RegisterRequest;
 import com.sneakerspick.dto.response.WebResponse;
 import com.sneakerspick.repository.RoleRepository;
 import com.sneakerspick.repository.UserRepository;
@@ -22,7 +21,6 @@ import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 
 @SpringBootTest
@@ -48,7 +46,7 @@ class UserControllerTest {
 
     @Test
     void testRegisterSuccess() throws Exception{
-        RegisterUserRequest request = new RegisterUserRequest();
+        RegisterRequest request = new RegisterRequest();
         request.setName("indar");
         request.setUsername("indar");
         request.setEmail("indar@gmail.com");
@@ -78,7 +76,7 @@ class UserControllerTest {
 
     @Test
     void testRegisterBadRequest() throws Exception {
-        RegisterUserRequest request = new RegisterUserRequest();
+        RegisterRequest request = new RegisterRequest();
         request.setName("indar");
         request.setUsername("indar");
         request.setEmail("indar");
@@ -117,7 +115,7 @@ class UserControllerTest {
         user.setRoles(Set.of(role));
         userRepository.save(user);
 
-        RegisterUserRequest request = new RegisterUserRequest();
+        RegisterRequest request = new RegisterRequest();
         request.setName("indar");
         request.setUsername("indar");
         request.setEmail("indar@gmail.com");

@@ -2,7 +2,7 @@ package com.sneakerspick.service.impl;
 
 import com.sneakerspick.domain.Role;
 import com.sneakerspick.domain.User;
-import com.sneakerspick.dto.request.RegisterUserRequest;
+import com.sneakerspick.dto.request.RegisterRequest;
 import com.sneakerspick.dto.response.UserResponse;
 import com.sneakerspick.repository.RoleRepository;
 import com.sneakerspick.repository.UserRepository;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponse register(RegisterUserRequest request) {
+    public UserResponse register(RegisterRequest request) {
         validationService.validate(request);
         if (userRepository.existsUserByUsername(request.getUsername())) {
             log.error("USER ALREADY EXIST");

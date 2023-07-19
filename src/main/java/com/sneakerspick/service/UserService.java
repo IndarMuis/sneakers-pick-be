@@ -1,11 +1,11 @@
 package com.sneakerspick.service;
 
-import com.sneakerspick.dto.request.RegisterUserRequest;
+import com.sneakerspick.dto.request.RegisterRequest;
 import com.sneakerspick.dto.response.UserResponse;
 
 public interface UserService {
 
-    UserResponse register(RegisterUserRequest request);
+    UserResponse register(RegisterRequest request);
 
     UserResponse findByUsername(String username);
 
