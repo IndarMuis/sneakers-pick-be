@@ -8,6 +8,8 @@ import com.sneakerspick.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,10 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping(
+            path = "/products",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public WebResponse<List<ProductResponse>> search(
             @RequestParam(name = "id", required = false) Long id,
             @RequestParam(name = "name", required = false) String name,
