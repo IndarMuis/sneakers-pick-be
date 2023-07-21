@@ -29,7 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 @Slf4j
-public class UsernamePasswordAuthProcessingFilter extends AbstractAuthenticationProcessingFilter {
+public class UsernamePasswordAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     private ObjectMapper objectMapper;
 
@@ -39,7 +39,7 @@ public class UsernamePasswordAuthProcessingFilter extends AbstractAuthentication
 
     private CustomUserDetailService customUserDetailService;
 
-    public UsernamePasswordAuthProcessingFilter(
+    public UsernamePasswordAuthFilter(
             ObjectMapper objectMapper,
             JwtService jwtService,
             JwtConfig jwtConfig,

@@ -31,7 +31,7 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private ProductCategory productCategory;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<ProductGallery> galleries;
 
 }

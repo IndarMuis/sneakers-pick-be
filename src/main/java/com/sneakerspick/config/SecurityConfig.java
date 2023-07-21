@@ -3,14 +3,13 @@ package com.sneakerspick.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sneakerspick.exception.CustomAccessDeniedHandler;
 import com.sneakerspick.security.CustomUserDetailService;
-import com.sneakerspick.security.filter.JwtAuthenticationFilter;
-import com.sneakerspick.security.filter.UsernamePasswordAuthProcessingFilter;
+import com.sneakerspick.security.filter.JwtAuthFilter;
+import com.sneakerspick.security.filter.UsernamePasswordAuthFilter;
 import com.sneakerspick.security.filter.UsernamePasswordAuthProvider;
 import com.sneakerspick.security.jwt.JwtConfig;
 import com.sneakerspick.security.jwt.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +20,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -37,12 +35,10 @@ public class SecurityConfig {
     private JwtService jwtService;
     private ObjectMapper objectMapper;
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UsernamePasswordAuthProvider usernamePasswordAuthProvider;
 
     @Autowired
-    public void registerAuthenticationProvider(AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public void registerAuthProvider(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.authenticationProvider(usernamePasswordAuthProvider);
     }
 
@@ -78,11 +74,11 @@ public class SecurityConfig {
                     handler.accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper));
                 })
                 .addFilterBefore(
-                        new UsernamePasswordAuthProcessingFilter(objectMapper, jwtService, jwtConfig, customUserDetailService, authenticationManager),
+                        new UsernamePasswordAuthFilter(objectMapper, jwtService, jwtConfig, customUserDetailService, authenticationManager),
                         UsernamePasswordAuthenticationFilter.class
                 )
                 .addFilterAfter(
-                        new JwtAuthenticationFilter(jwtService, jwtConfig, objectMapper),
+                        new JwtAuthFilter(jwtService, jwtConfig, objectMapper),
                         UsernamePasswordAuthenticationFilter.class
                 );
         return httpSecurity.build();

@@ -20,6 +20,6 @@ public class WebResponse<T> {
     private int code;
     private T data;
     private String errors;
-
+    private PagingResponse paging;
 
 }
