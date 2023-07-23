@@ -2,7 +2,9 @@ package com.sneakerspick.service.impl;
 
 import com.sneakerspick.domain.Product;
 import com.sneakerspick.domain.ProductCategory;
+import com.sneakerspick.domain.ProductGallery;
 import com.sneakerspick.dto.response.ProductCategoryResponse;
+import com.sneakerspick.dto.response.ProductResponse;
 import com.sneakerspick.repository.ProductCategoryRepository;
 import com.sneakerspick.repository.ProductRepository;
 import com.sneakerspick.service.ProductCategoryService;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +46,23 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         ProductCategoryResponse productCategoryResponse = new ProductCategoryResponse();
         productCategoryResponse.setCategoryId(productCategory.getId());
         productCategoryResponse.setName(productCategory.getName());
+        if (productCategory.getProducts().isEmpty()) {
+            productCategoryResponse.setProducts(Collections.emptyList());
+        } else {
+            List<ProductResponse> productResponseList = productCategory.getProducts()
+                            .stream().map(product -> {
+                        return ProductResponse.builder()
+                                .id(product.getId())
+                                .name(product.getName())
+                                .price(product.getPrice())
+                                .tags(product.getTags())
+                                .description(product.getDescription())
+                                .galleries(product.getGalleries().stream().map(ProductGallery::getUrl).toList())
+                                .build();
+                    }).toList();
+
+            productCategoryResponse.setProducts(productResponseList);
+        }
         return productCategoryResponse;
 
     }
