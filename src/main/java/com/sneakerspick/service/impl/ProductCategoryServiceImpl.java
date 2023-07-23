@@ -50,16 +50,16 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             productCategoryResponse.setProducts(Collections.emptyList());
         } else {
             List<ProductResponse> productResponseList = productCategory.getProducts()
-                            .stream().map(product -> {
-                        return ProductResponse.builder()
+                            .stream().map(product ->
+                        ProductResponse.builder()
                                 .id(product.getId())
                                 .name(product.getName())
                                 .price(product.getPrice())
                                 .tags(product.getTags())
                                 .description(product.getDescription())
                                 .galleries(product.getGalleries().stream().map(ProductGallery::getUrl).toList())
-                                .build();
-                    }).toList();
+                                .build()
+                    ).toList();
 
             productCategoryResponse.setProducts(productResponseList);
         }
