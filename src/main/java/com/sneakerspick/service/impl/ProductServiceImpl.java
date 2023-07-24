@@ -72,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
                 .price(product.getPrice())
                 .description(product.getDescription())
                 .tags(product.getTags())
+                .category(product.getProductCategory().getName())
                 .galleries(product.getGalleries().stream().map(gallery -> gallery.getUrl()).toList())
                 .build();
     }

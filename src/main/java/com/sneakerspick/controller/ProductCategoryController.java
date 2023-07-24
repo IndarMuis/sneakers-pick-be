@@ -24,7 +24,7 @@ public class ProductCategoryController {
     private final ProductCategoryService productCategoryService;
 
     @GetMapping(
-            path = "/category",
+            path = "/categories",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<List<ProductCategoryResponse>> findAllCategory(

@@ -25,6 +25,7 @@ public class Product {
 
     private String tags;
 
+    @Column(columnDefinition = "text")
     private String description;
 
     @ManyToOne
