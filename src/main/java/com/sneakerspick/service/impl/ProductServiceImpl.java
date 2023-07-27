@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public Page<ProductResponse> searchProduct(ProductSearchRequest request) {
 
-        Specification<Product> productSpecification = (root, query, builder) -> {
+        /*Specification<Product> productSpecification = (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (Objects.nonNull(request.getId())) {
@@ -52,15 +52,16 @@ public class ProductServiceImpl implements ProductService {
             }
 
             return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
-        };
+        };*/
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        Page<Product> products = productRepository.findAll(productSpecification, pageable);
+        //Page<Product> products = productRepository.findAll(productSpecification, pageable);
+        Page<ProductResponse> products = productRepository.findProductList(request.getId(), request.getName(), request.getPrice(), request.getTags(), pageable);
         if (products.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
         } else {
-            List<ProductResponse> productResponses = products.stream().map(this::toProductResponse).toList();
-            return new PageImpl<>(productResponses, pageable, products.getTotalElements());
+//            List<ProductResponse> productResponses = products.stream().map(this::toProductResponse).toList();
+            return new PageImpl<>(products.getContent(), pageable, products.getTotalElements());
         }
 
     }
@@ -73,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
                 .description(product.getDescription())
                 .tags(product.getTags())
                 .category(product.getProductCategory().getName())
-                .galleries(product.getGalleries().stream().map(gallery -> gallery.getUrl()).toList())
+                //.galleries(product.getGalleries().stream().map(gallery -> gallery.getUrl()).toList())
                 .build();
     }
 }

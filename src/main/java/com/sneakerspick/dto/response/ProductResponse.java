@@ -29,6 +29,6 @@ public class ProductResponse {
 
     private String category;
 
-    private List<String> galleries;
+//    private List<String> galleries;
 
 }

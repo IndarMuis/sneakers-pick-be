@@ -57,7 +57,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
                                 .price(product.getPrice())
                                 .tags(product.getTags())
                                 .description(product.getDescription())
-                                .galleries(product.getGalleries().stream().map(ProductGallery::getUrl).toList())
+                                //.galleries(product.getGalleries().stream().map(ProductGallery::getUrl).toList())
                                 .build()
                     ).toList();
 
