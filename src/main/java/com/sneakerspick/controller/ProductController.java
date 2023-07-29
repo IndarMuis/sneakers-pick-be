@@ -28,17 +28,17 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<List<ProductResponse>> search(
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "tags", required = false) String tags,
-            @RequestParam(name = "category", required = false) String category,
-            @RequestParam(name = "page", required = true, defaultValue = "0") Integer page,
+            @RequestParam(name = "name", required = false, defaultValue = "") String name,
+            @RequestParam(name = "tags", required = false, defaultValue = "") String tags,
+            @RequestParam(name = "category", required = false, defaultValue = "") String category,
+            @RequestParam(name = "page", required = true, defaultValue = "1") Integer page,
             @RequestParam(name = "size", required = true, defaultValue = "10") Integer size
     ) {
         ProductSearchRequest productSearchRequest = ProductSearchRequest.builder()
                 .name(name)
                 .tags(tags)
                 .category(category)
-                .page(page)
+                .page(page - 1)
                 .size(size).build();
 
         Page<ProductResponse> productResponse = productService.searchProduct(productSearchRequest);
@@ -47,7 +47,7 @@ public class ProductController {
                 .message("success")
                 .data(productResponse.getContent())
                 .paging(PagingResponse.builder()
-                        .currentPage(productResponse.getNumber())
+                        .currentPage(productResponse.getNumber() + 1)
                         .totalPage(productResponse.getTotalPages())
                         .build()
                 )

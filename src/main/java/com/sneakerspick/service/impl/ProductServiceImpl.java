@@ -35,20 +35,16 @@ public class ProductServiceImpl implements ProductService {
         /*Specification<Product> productSpecification = (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (Objects.nonNull(request.getId())) {
-                predicates.add(builder.equal(root.get("id"), request.getId()));
-            }
-
             if (Objects.nonNull(request.getName())) {
                 predicates.add(builder.like(root.get("name"), "%" + request.getName() + "%"));
             }
 
-            if (Objects.nonNull(request.getPrice())) {
-                predicates.add(builder.equal(root.get("price"), request.getPrice()));
+            if (Objects.nonNull(request.getTags())) {
+                predicates.add(builder.equal(root.get("tags"), "%" + request.getTags() + "%"));
             }
 
-            if (Objects.nonNull(request.getTags())) {
-                predicates.add(builder.equal(root.get("tags"), request.getPrice()));
+            if (Objects.nonNull(request.getCategory())) {
+                predicates.add(builder.equal(root.get("category"), "%" + request.getCategory() + "%"));
             }
 
             return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
