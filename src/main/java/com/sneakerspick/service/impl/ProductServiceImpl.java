@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         //Page<Product> products = productRepository.findAll(productSpecification, pageable);
-        Page<ProductResponse> products = productRepository.findProductList(request.getId(), request.getName(), request.getPrice(), request.getTags(), pageable);
+        Page<ProductResponse> products = productRepository.findProductList(request.getName(), request.getTags(), request.getCategory(), pageable);
         if (products.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
         } else {

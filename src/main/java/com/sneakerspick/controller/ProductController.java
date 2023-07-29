@@ -28,18 +28,16 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<List<ProductResponse>> search(
-            @RequestParam(name = "id", required = false) Long id,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "price", required = false) Double price,
             @RequestParam(name = "tags", required = false) String tags,
+            @RequestParam(name = "category", required = false) String category,
             @RequestParam(name = "page", required = true, defaultValue = "0") Integer page,
             @RequestParam(name = "size", required = true, defaultValue = "10") Integer size
     ) {
         ProductSearchRequest productSearchRequest = ProductSearchRequest.builder()
-                .id(id)
                 .name(name)
-                .price(price)
                 .tags(tags)
+                .category(category)
                 .page(page)
                 .size(size).build();
 

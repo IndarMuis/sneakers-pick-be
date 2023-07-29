@@ -14,13 +14,14 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     @Query(
-            "SELECT p FROM Product p " +
-                    "INNER JOIN ProductCategory pc ON p.productCategory.id = pc.id " +
-                    "INNER JOIN ProductGallery pg ON p.id = pg.product.id " +
+            "SELECT DISTINCT " +
+                    "new com.sneakerspick.dto.response.ProductResponse(p.id, p.name, p.tags, p.price, p.description, pc.name) FROM Product p " +
+                    "INNER JOIN ProductCategory pc ON pc.id = p.productCategory.id " +
                     "WHERE " +
-                    "p.name LIKE LOWER(CONCAT('%', :name, '%')) AND " +
-                    "p.tags LIKE LOWER(CONCAT('%', :tags, '%')) "
+                    "p.name LIKE LOWER(CONCAT('%', :name, '%')) OR " +
+                    "p.tags LIKE LOWER(CONCAT('%', :tags, '%')) OR " +
+                    "pc.name LIKE LOWER(CONCAT('%', :category, '%'))"
     )
-    public Page<ProductResponse> findProductList(Long id, String name, Double price, String tags, Pageable pageable);
+    Page<ProductResponse> findProductList(String name, String tags, String category, Pageable pageable);
 
 }

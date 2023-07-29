@@ -12,13 +12,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductSearchRequest {
 
-    private Long id;
-
     private String name;
 
-    private Double price;
-
     private String tags;
+
+    private String category;
 
     @NotBlank
     private Integer size;
