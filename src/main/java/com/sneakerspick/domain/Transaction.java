@@ -22,10 +22,10 @@ public class Transaction {
 
     private String address;
 
-    @Column(name = "total_price", precision = 8, scale = 2, columnDefinition = "default 0.00")
+    @Column(name = "total_price", precision = 10, scale = 2, columnDefinition = "default 0.00")
     private Double totalPrice;
 
-    @Column(name = "shipping_price", precision = 8, scale = 2, columnDefinition = "default 0.00")
+    @Column(name = "shipping_price", precision = 10, scale = 2, columnDefinition = "default 0.00")
     private Double ShippingPrice;
 
     @Enumerated(EnumType.ORDINAL)

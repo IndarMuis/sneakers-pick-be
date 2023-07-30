@@ -20,7 +20,7 @@ public class Product {
 
     private String name;
 
-    @Column(precision = 8, scale = 2)
+    @Column(precision = 10, scale = 2)
     private Double price;
 
     private String tags;
