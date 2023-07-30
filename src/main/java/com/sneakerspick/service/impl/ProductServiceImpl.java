@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public Page<ProductResponse> searchProduct(ProductSearchRequest request) {
 
-        /*Specification<Product> productSpecification = (root, query, builder) -> {
+        Specification<Product> productSpecification = (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (Objects.nonNull(request.getName())) {
@@ -40,24 +40,23 @@ public class ProductServiceImpl implements ProductService {
             }
 
             if (Objects.nonNull(request.getTags())) {
-                predicates.add(builder.equal(root.get("tags"), "%" + request.getTags() + "%"));
+                predicates.add(builder.like(root.get("tags"), "%" + request.getTags() + "%"));
             }
 
             if (Objects.nonNull(request.getCategory())) {
-                predicates.add(builder.equal(root.get("category"), "%" + request.getCategory() + "%"));
+                predicates.add(builder.like(root.get("category"), "%" + request.getCategory() + "%"));
             }
 
             return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
-        };*/
+        };
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        //Page<Product> products = productRepository.findAll(productSpecification, pageable);
-        Page<ProductResponse> products = productRepository.findProductList(request.getName(), request.getTags(), request.getCategory(), pageable);
+        Page<Product> products = productRepository.findAll(productSpecification, pageable);
         if (products.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
         } else {
-//            List<ProductResponse> productResponses = products.stream().map(this::toProductResponse).toList();
-            return new PageImpl<>(products.getContent(), pageable, products.getTotalElements());
+            List<ProductResponse> productResponses = products.stream().map(this::toProductResponse).toList();
+            return new PageImpl<>(productResponses, pageable, products.getTotalElements());
         }
 
     }

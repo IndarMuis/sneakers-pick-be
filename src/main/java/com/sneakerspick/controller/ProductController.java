@@ -28,9 +28,9 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<List<ProductResponse>> search(
-            @RequestParam(name = "name", required = false, defaultValue = "") String name,
-            @RequestParam(name = "tags", required = false, defaultValue = "") String tags,
-            @RequestParam(name = "category", required = false, defaultValue = "") String category,
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "tags", required = false) String tags,
+            @RequestParam(name = "category", required = false) String category,
             @RequestParam(name = "page", required = true, defaultValue = "1") Integer page,
             @RequestParam(name = "size", required = true, defaultValue = "10") Integer size
     ) {
