@@ -28,7 +28,7 @@ public class ErrorController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<WebResponse<?>> responseStatusException(ResponseStatusException exc) {
         WebResponse<?> response = WebResponse.builder()
-                .message("error")
+                .message(exc.getMessage())
                 .code(exc.getStatusCode().value())
                 .errors(exc.getReason()).build();
         return ResponseEntity.badRequest().body(response);
@@ -37,10 +37,11 @@ public class ErrorController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<WebResponse<?>> errorException(Exception exc) {
         WebResponse<?> response = WebResponse.builder()
-                .message("error")
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .errors(exc.getMessage()).build();
         return ResponseEntity.internalServerError().body(response);
     }
+
+
 
 }

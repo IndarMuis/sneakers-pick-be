@@ -8,4 +8,6 @@ public interface ProductService {
 
     Page<ProductResponse> searchProduct(ProductSearchRequest request);
 
+    ProductResponse findById(Long id);
+
 }

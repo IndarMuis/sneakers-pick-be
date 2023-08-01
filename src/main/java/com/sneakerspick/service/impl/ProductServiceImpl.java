@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +60,17 @@ public class ProductServiceImpl implements ProductService {
             return new PageImpl<>(productResponses, pageable, products.getTotalElements());
         }
 
+    }
+
+    @Override
+    public ProductResponse findById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Data not found");
+        }
+
+
+        return toProductResponse(product.get());
     }
 
     private ProductResponse toProductResponse(Product product) {

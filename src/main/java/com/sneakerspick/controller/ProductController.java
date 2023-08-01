@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -51,6 +48,18 @@ public class ProductController {
                         .totalPage(productResponse.getTotalPages())
                         .build()
                 )
+                .build();
+    }
+
+    @GetMapping(
+            path= "/products/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<ProductResponse> findById(@PathVariable(name = "id") Long id) {
+        return WebResponse.<ProductResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Success")
+                .data(productService.findById(id))
                 .build();
     }
 

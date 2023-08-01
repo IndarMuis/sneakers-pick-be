@@ -12,9 +12,4 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
-//    @Query(
-//            "SELECT p FROM Product p WHERE "
-//    )
-//    Optional<ProductResponse> findProductById(Long id);
-
 }
