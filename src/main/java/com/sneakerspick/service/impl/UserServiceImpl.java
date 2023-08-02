@@ -10,12 +10,16 @@ import com.sneakerspick.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +63,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findByUsername(String username) {
         return null;
+    }
+
+    @Override
+    public UserResponse getCurrentLoggedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = (String) auth.getPrincipal();
+        Optional<User> user = userRepository.findUserByUsername(username);
+
+        if (user.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+        }
+
+        return UserResponse.builder()
+                .id(user.get().getId())
+                .name(user.get().getName())
+                .username(username)
+                .email(user.get().getEmail())
+                .phone(user.get().getPhone())
+                .build();
     }
 
 }

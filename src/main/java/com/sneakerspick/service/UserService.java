@@ -9,4 +9,6 @@ public interface UserService {
 
     UserResponse findByUsername(String username);
 
+    UserResponse getCurrentLoggedUser();
+
 }

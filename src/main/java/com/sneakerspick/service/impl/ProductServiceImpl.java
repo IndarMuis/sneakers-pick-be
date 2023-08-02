@@ -5,6 +5,7 @@ import com.sneakerspick.dto.request.ProductSearchRequest;
 import com.sneakerspick.dto.response.ProductResponse;
 import com.sneakerspick.repository.ProductRepository;
 import com.sneakerspick.service.ProductService;
+import com.sneakerspick.service.UserService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

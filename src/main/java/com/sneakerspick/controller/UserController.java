@@ -6,11 +6,9 @@ import com.sneakerspick.dto.response.WebResponse;
 import com.sneakerspick.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +27,18 @@ public class UserController {
         return WebResponse.<UserResponse>builder()
                 .message("success")
                 .code(HttpStatus.CREATED.value())
+                .data(response).build();
+    }
+
+    @GetMapping(
+            path = "/current",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<UserResponse> currentLogged() {
+        UserResponse response = userService.getCurrentLoggedUser();
+        return WebResponse.<UserResponse>builder()
+                .message("success")
+                .code(HttpStatus.OK.value())
                 .data(response).build();
     }
 
