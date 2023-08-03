@@ -3,6 +3,7 @@ package com.sneakerspick.service.impl;
 import com.sneakerspick.domain.Role;
 import com.sneakerspick.domain.User;
 import com.sneakerspick.dto.request.RegisterRequest;
+import com.sneakerspick.dto.request.UpdateUserRequest;
 import com.sneakerspick.dto.response.UserResponse;
 import com.sneakerspick.repository.RoleRepository;
 import com.sneakerspick.repository.UserRepository;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -80,6 +82,34 @@ public class UserServiceImpl implements UserService {
                 .id(user.get().getId())
                 .name(user.get().getName())
                 .username(username)
+                .email(user.get().getEmail())
+                .phone(user.get().getPhone())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public UserResponse update(UpdateUserRequest request, Long id) {
+        validationService.validate(request);
+
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+        }
+
+        if (Objects.nonNull(request.getName())) {
+            user.get().setName(request.getName());
+        }
+
+        if (Objects.nonNull(request.getPhone())) {
+            user.get().setPhone(request.getPhone());
+        }
+
+        userRepository.save(user.get());
+        return UserResponse.builder()
+                .id(user.get().getId())
+                .name(user.get().getName())
+                .username(user.get().getUsername())
                 .email(user.get().getEmail())
                 .phone(user.get().getPhone())
                 .build();

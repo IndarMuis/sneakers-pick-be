@@ -1,6 +1,7 @@
 package com.sneakerspick.controller;
 
 import com.sneakerspick.dto.request.RegisterRequest;
+import com.sneakerspick.dto.request.UpdateUserRequest;
 import com.sneakerspick.dto.response.UserResponse;
 import com.sneakerspick.dto.response.WebResponse;
 import com.sneakerspick.service.UserService;
@@ -40,6 +41,20 @@ public class UserController {
                 .message("success")
                 .code(HttpStatus.OK.value())
                 .data(response).build();
+    }
+
+    @PatchMapping(
+            path = "/update/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<UserResponse> updateUser(@RequestBody UpdateUserRequest request, @PathVariable(name = "id") Long id) {
+        UserResponse response = userService.update(request, id);
+
+        return WebResponse.<UserResponse>builder()
+                .message("success")
+                .code(HttpStatus.OK.value())
+                .data(response)
+                .build();
     }
 
 }
