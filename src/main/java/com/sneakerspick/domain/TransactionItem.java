@@ -19,6 +19,10 @@ public class TransactionItem {
     @Column(columnDefinition = "default 0")
     private Long quantity;
 
+    @ManyToOne
+    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+
     @OneToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
