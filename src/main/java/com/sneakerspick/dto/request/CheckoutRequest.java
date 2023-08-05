@@ -1,7 +1,9 @@
 package com.sneakerspick.dto.request;
 
-import com.sneakerspick.enums.PaymentType;
 import com.sneakerspick.enums.TransactionStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,14 +17,16 @@ import java.util.List;
 @Builder
 public class CheckoutRequest {
 
+    @NotEmpty
     private List<ItemCheckoutRequest> items;
 
+    @NotBlank
     private String address;
 
-    private TransactionStatus status;
+    @NotNull
+    private Double totalPrice;
 
-    private Long totalPrice;
-
-    private Long shippingPrice;
+    @NotNull
+    private Double shippingPrice;
 
 }

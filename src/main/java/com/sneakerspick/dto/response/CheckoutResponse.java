@@ -20,9 +20,9 @@ public class CheckoutResponse {
 
     private String address;
 
-    private Long totalPrice;
+    private Double totalPrice;
 
-    private Long shippingPrice;
+    private Double shippingPrice;
 
     private TransactionStatus status;
 

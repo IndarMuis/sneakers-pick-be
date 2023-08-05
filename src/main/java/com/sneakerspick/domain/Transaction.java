@@ -26,7 +26,7 @@ public class Transaction {
     private Double totalPrice;
 
     @Column(name = "shipping_price", precision = 10, scale = 2, columnDefinition = "default 0.00")
-    private Double ShippingPrice;
+    private Double shippingPrice;
 
     @Enumerated(EnumType.ORDINAL)
     private TransactionStatus transactionStatus;
