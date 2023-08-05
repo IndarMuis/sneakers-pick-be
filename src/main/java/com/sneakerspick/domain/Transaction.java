@@ -29,8 +29,10 @@ public class Transaction {
     private Double shippingPrice;
 
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "transaction_status", columnDefinition = "integer default 2")
     private TransactionStatus transactionStatus;
 
+    @Column(name = "payment_type", columnDefinition = "varchar(10) default 'MANUAL'")
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 

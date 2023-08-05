@@ -3,6 +3,7 @@ package com.sneakerspick.service.impl;
 import com.sneakerspick.domain.*;
 import com.sneakerspick.dto.request.CheckoutRequest;
 import com.sneakerspick.dto.response.*;
+import com.sneakerspick.enums.PaymentType;
 import com.sneakerspick.enums.TransactionStatus;
 import com.sneakerspick.repository.ProductRepository;
 import com.sneakerspick.repository.TransactionItemRepository;
@@ -44,23 +45,29 @@ public class TransactionServiceImpl implements TransactionService {
         String username = (String) auth.getPrincipal();
         User user = userRepository.findUserByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
 
+        Transaction transaction = new Transaction();
+        transaction.setAddress(request.getAddress());
+        transaction.setShippingPrice(request.getShippingPrice());
+        transaction.setTotalPrice(request.getTotalPrice());
+        transaction.setPaymentType(
+                request.getPaymentType() != null ? request.getPaymentType() : PaymentType.MANUAL
+        );
+        transaction.setTransactionStatus(
+                request.getTransactionStatus() != null ? request.getTransactionStatus() : TransactionStatus.PENDING
+        );
+        transaction.setUser(user);
 
-        Transaction transaction = Transaction.builder()
-                .user(user)
-                .address(request.getAddress())
-                .totalPrice(request.getTotalPrice())
-                .shippingPrice(request.getShippingPrice())
-                .transactionStatus(TransactionStatus.PENDING)
-                .build();
+        log.info("SAVE TRANSACTION");
         Transaction transactionSave = transactionRepository.save(transaction);
 
         List<ItemCheckoutResponse> items = new ArrayList<>();
         request.getItems().forEach((item) -> {
+        log.info("SAVE TRANSACTION ITEM");
             TransactionItem transactionItem = new TransactionItem();
-            transactionItem.setUser(user);
             Product product = productRepository.findById(item.getProductId()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found")
             );
+            transactionItem.setUser(user);
             transactionItem.setProduct(product);
             transactionItem.setQuantity(item.getQuantity());
             transactionItem.setTransaction(transaction);
@@ -73,6 +80,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .id(transactionSave.getId())
                 .userId(user.getId())
                 .address(transactionSave.getAddress())
+                .shippingPrice(transactionSave.getShippingPrice())
                 .totalPrice(transactionSave.getTotalPrice())
                 .status(transactionSave.getTransactionStatus())
                 .items(items)

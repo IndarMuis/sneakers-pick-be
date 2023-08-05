@@ -1,5 +1,8 @@
 package com.sneakerspick.dto.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.sneakerspick.enums.PaymentType;
 import com.sneakerspick.enums.TransactionStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CheckoutRequest {
 
     @NotEmpty
@@ -27,6 +31,11 @@ public class CheckoutRequest {
     private Double totalPrice;
 
     @NotNull
+//    shipping_price
     private Double shippingPrice;
+
+    private PaymentType paymentType;
+
+    private TransactionStatus transactionStatus;
 
 }

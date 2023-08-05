@@ -50,7 +50,7 @@ public class JwtService extends JwtConfig {
                 .setSubject(customUserDetail.getUsername())
                 .claim("authorities", authorities)
                 .setIssuedAt(Date.from(currentDateTime))
-                .setExpiration(Date.from(currentDateTime.plusSeconds(getExpiration())))
+                .setExpiration(Date.from(currentDateTime.plusSeconds(getExpiration() * 1000)))
                 .compact();
     }
 

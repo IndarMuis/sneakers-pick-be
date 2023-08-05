@@ -20,8 +20,8 @@ public class TransactionItem {
     private Long quantity;
 
     @ManyToOne
-    private User user;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @OneToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
