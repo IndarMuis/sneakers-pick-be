@@ -42,20 +42,19 @@ public class TransactionController {
     }
 
     @GetMapping(
-            path = "/transactions/all",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            path = "/transactions",
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<List<TransactionResponse>> getAllTransaction(
             @RequestParam(name = "id", required = false) Long id,
-            @RequestParam(name = "transaction_status", required = false) TransactionStatus status,
+            @RequestParam(name = "transaction_status", required = false) Integer status,
             @RequestParam(name = "page", required = true, defaultValue = "1") Integer page,
             @RequestParam(name = "size", required = true, defaultValue = "10") Integer size
             ) {
         TransactionSearchRequest request = TransactionSearchRequest.builder()
                 .id(id)
                 .status(status)
-                .page(page + 1)
+                .page(page - 1)
                 .size(size).build();
 
         Page<TransactionResponse> transactionResponses = transactionService.getAllTransaction(request);

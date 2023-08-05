@@ -16,7 +16,7 @@ public class TransactionSearchRequest {
 
     private Long id;
 
-    private TransactionStatus status;
+    private Integer status;
 
     @NotBlank
     private Integer size;

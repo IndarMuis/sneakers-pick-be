@@ -3,7 +3,10 @@ package com.sneakerspick.service.impl;
 import com.sneakerspick.domain.*;
 import com.sneakerspick.dto.request.CheckoutRequest;
 import com.sneakerspick.dto.request.TransactionSearchRequest;
-import com.sneakerspick.dto.response.*;
+import com.sneakerspick.dto.response.CheckoutResponse;
+import com.sneakerspick.dto.response.ItemCheckoutResponse;
+import com.sneakerspick.dto.response.ProductResponse;
+import com.sneakerspick.dto.response.TransactionResponse;
 import com.sneakerspick.enums.PaymentType;
 import com.sneakerspick.enums.TransactionStatus;
 import com.sneakerspick.repository.ProductRepository;
@@ -11,7 +14,6 @@ import com.sneakerspick.repository.TransactionItemRepository;
 import com.sneakerspick.repository.TransactionRepository;
 import com.sneakerspick.repository.UserRepository;
 import com.sneakerspick.service.TransactionService;
-import com.sneakerspick.service.UserService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +32,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +70,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         List<ItemCheckoutResponse> items = new ArrayList<>();
         request.getItems().forEach((item) -> {
-        log.info("SAVE TRANSACTION ITEM");
+            log.info("SAVE TRANSACTION ITEM");
             TransactionItem transactionItem = new TransactionItem();
             Product product = productRepository.findById(item.getProductId()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found")
@@ -114,9 +113,13 @@ public class TransactionServiceImpl implements TransactionService {
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         Page<Transaction> transactions = transactionRepository.findAll(specification, pageable);
-        List<TransactionResponse> transactionResponses = transactions.getContent().stream().map(this::toTransactionResponse).toList();
 
-        return new PageImpl<>(transactionResponses, pageable, transactions.getTotalElements());
+        if (transactions.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "data not found");
+        } else {
+            List<TransactionResponse> transactionResponses = transactions.getContent().stream().map(this::toTransactionResponse).toList();
+            return new PageImpl<>(transactionResponses, pageable, transactions.getTotalElements());
+        }
     }
 
     private TransactionResponse toTransactionResponse(Transaction transaction) {
