@@ -2,6 +2,7 @@ package com.sneakerspick.service.impl;
 
 import com.sneakerspick.domain.*;
 import com.sneakerspick.dto.request.CheckoutRequest;
+import com.sneakerspick.dto.request.TransactionSearchRequest;
 import com.sneakerspick.dto.response.*;
 import com.sneakerspick.enums.PaymentType;
 import com.sneakerspick.enums.TransactionStatus;
@@ -11,8 +12,14 @@ import com.sneakerspick.repository.TransactionRepository;
 import com.sneakerspick.repository.UserRepository;
 import com.sneakerspick.service.TransactionService;
 import com.sneakerspick.service.UserService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -23,7 +30,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -84,6 +93,43 @@ public class TransactionServiceImpl implements TransactionService {
                 .totalPrice(transactionSave.getTotalPrice())
                 .status(transactionSave.getTransactionStatus())
                 .items(items)
+                .build();
+    }
+
+    @Override
+    public Page<TransactionResponse> getAllTransaction(TransactionSearchRequest request) {
+        Specification<Transaction> specification = (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (Objects.nonNull(request.getId())) {
+                predicates.add(builder.equal(root.get("id"), request.getId()));
+            }
+
+            if (Objects.nonNull(request.getStatus())) {
+                predicates.add(builder.equal(root.get("transaction_status"), request.getStatus()));
+            }
+
+            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
+        };
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<Transaction> transactions = transactionRepository.findAll(specification, pageable);
+        List<TransactionResponse> transactionResponses = transactions.getContent().stream().map(this::toTransactionResponse).toList();
+
+        return new PageImpl<>(transactionResponses, pageable, transactions.getTotalElements());
+    }
+
+    private TransactionResponse toTransactionResponse(Transaction transaction) {
+        List<ItemCheckoutResponse> itemCheckoutResponses = transaction.getTransactionItems().stream().map(this::toItemCheckoutResponse).toList();
+        return TransactionResponse.builder()
+                .id(transaction.getId())
+                .userId(transaction.getUser().getId())
+                .address(transaction.getAddress())
+                .shippingPrice(transaction.getShippingPrice())
+                .totalPrice(transaction.getTotalPrice())
+                .transactionStatus(transaction.getTransactionStatus())
+                .paymentType(transaction.getPaymentType())
+                .items(itemCheckoutResponses)
                 .build();
     }
 
